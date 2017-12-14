@@ -14,7 +14,7 @@ store.dispatch('setToken', token);
 
 (async function () {
   if (token) {
-    await store.dispatch('userData')
+    await store.dispatch('getUser')
   }
 })()
 

@@ -28,7 +28,7 @@ const store = new Vuex.Store({
   }),
 
   mutations: {
-    LOGIN (state, data) {
+    SET_USER (state, data) {
       state.pending = true
       state.user.name = data.user
       state.user.email = data.email
@@ -56,10 +56,13 @@ const store = new Vuex.Store({
       let res = await axios.post('/login', creds)
       if (res.status === 200) {
         dispatch('setToken', res.data.token)
-        await dispatch('userData')
+        dispatch('getUser', res.data)
         context.$router.push('/list')
-        return true
+      } else {
+        commit('LOGOUT')
+        localStorage.removeItem('id_token')
       }
+      return true
     },
 
     logout ({ state, commit }) {
@@ -79,10 +82,11 @@ const store = new Vuex.Store({
       return true
     },
 
-    async userData ({state, dispatch, commit}) {
+    async getUser ({state, dispatch, commit}) {
       let res = await axios.get('/user')
+      console.log(res)
       if (res.status === 200) {
-        commit('LOGIN', res.data)
+        commit('SET_USER', res.data)
       } else {
         commit('LOGOUT')
       }

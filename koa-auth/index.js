@@ -137,7 +137,8 @@ router.post('/users', async(ctx, next) => {
 });
 
 // маршрут для списка пользователей
-router.get('/users', async(ctx, next) => {
+// добавляем passport.authenticate('jwt', { session: false }) везде где нужно защита
+router.get('/users', passport.authenticate('jwt', { session: false }), async (ctx, next) => {
   try {
     ctx.body = await User.find();
     console.log(ctx.body)
@@ -160,22 +161,15 @@ router.post('/login', async(ctx, next) => {
         email: user.email
       };
       const token = jwt.sign(payload, jwtsecret); //здесь создается JWT
-
       ctx.body = {
-        id: user.id,
-        email: user.email,
-        user: user.displayName,
         token: 'JWT ' + token
       };
     }
   })(ctx, next);
-
 });
 
-// маршрут для авторизации по токену
-
-router.get('/user', async(ctx, next) => {
-
+// данные пользователя
+router.get('/user', passport.authenticate('jwt', { session: false }), async(ctx, next) => {
   await passport.authenticate('jwt', function (err, user) {
     if (user) {
       ctx.body = {
