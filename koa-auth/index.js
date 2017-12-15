@@ -137,10 +137,10 @@ router.post('/users', async(ctx, next) => {
 });
 
 // маршрут для списка пользователей
-// добавляем passport.authenticate('jwt', { session: false }) везде где нужно защита
+// добавляем passport.authenticate('jwt', { session: false }) везде где нужна защита
 router.get('/users', passport.authenticate('jwt', { session: false }), async (ctx, next) => {
   try {
-    ctx.body = await User.find();
+    ctx.body = await User.find({}).select({ "createdAt": 1, "email": 1, "displayName": 1, "_id": 1 })
     console.log(ctx.body)
   }
   catch (err) {
@@ -156,11 +156,9 @@ router.post('/login', async(ctx, next) => {
     } else {
       //--payload - информация которую мы храним в токене и можем из него получать
       const payload = {
-        id: user.id,
-        displayName: user.displayName,
-        email: user.email
+        id: user.id
       };
-      const token = jwt.sign(payload, jwtsecret); //здесь создается JWT
+      const token = jwt.sign(payload, jwtsecret, { expiresIn: '24h' }); //здесь создается JWT
       ctx.body = {
         token: 'JWT ' + token
       };
@@ -171,6 +169,7 @@ router.post('/login', async(ctx, next) => {
 // данные пользователя
 router.get('/user', passport.authenticate('jwt', { session: false }), async(ctx, next) => {
   await passport.authenticate('jwt', function (err, user) {
+    console.log(user)
     if (user) {
       ctx.body = {
         id: user.id,
@@ -182,7 +181,6 @@ router.get('/user', passport.authenticate('jwt', { session: false }), async(ctx,
       console.log("err", err)
     }
   } )(ctx, next)
-
 });
 
 //---Socket Communication-----//

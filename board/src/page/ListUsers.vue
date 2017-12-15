@@ -6,7 +6,7 @@
         <div class="card">
           <img class="card-img-top" :src="user.ava ? user.ava : 'http://i.pravatar.cc/300'" alt="Card image cap">
           <div class="card-body">
-            <h4 class="card-title">{{user.name}} {{user.surname}}</h4>
+            <h4 class="card-title">{{user.displayName ? user.displayName : 'No name'}}</h4>
             <p class="card-text">{{user.email}}</p>
             <p class="card-text">{{formatDate(user.createdAt, user.id)}}</p>
             <router-link class="btn btn-primary" :to="`/user/${user.id}`">More</router-link>
