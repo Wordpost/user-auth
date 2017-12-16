@@ -25,7 +25,7 @@
             <router-link class="nav-link" to="/login">Sign in</router-link>
           </li>
           <li class="nav-item" v-if="isLoggedIn">
-            <router-link class="nav-link" to="/login">{{getName}}</router-link>
+            <router-link class="nav-link" :to="`/user/${getId}`">{{getName}}</router-link>
           </li>
         </ul>
       </div>
@@ -56,7 +56,8 @@ export default {
   computed: {
     ...mapGetters([
       'isLoggedIn',
-      'getName'
+      'getName',
+      'getId'
     ])
   }
 }

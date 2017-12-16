@@ -140,7 +140,7 @@ router.post('/users', async(ctx, next) => {
 // добавляем passport.authenticate('jwt', { session: false }) везде где нужна защита
 router.get('/users', passport.authenticate('jwt', { session: false }), async (ctx, next) => {
   try {
-    ctx.body = await User.find({}).select({ "createdAt": 1, "email": 1, "displayName": 1, "_id": 1 })
+    ctx.body = await User.find({}).select({ "createdAt": 1, "email": 1, "displayName": 1, "_id": 1 }).limit(8)
     console.log(ctx.body)
   }
   catch (err) {
@@ -181,6 +181,11 @@ router.get('/user', passport.authenticate('jwt', { session: false }), async(ctx,
       console.log("err", err)
     }
   } )(ctx, next)
+});
+
+// редактирование пользователя
+router.put('/edit/:id', passport.authenticate('jwt', { session: false }), async (ctx, next) => {
+  
 });
 
 //---Socket Communication-----//

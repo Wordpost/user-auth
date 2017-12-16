@@ -4,11 +4,7 @@
     <form @submit.prevent="submit">
       <div class="form-group">
         <label>Name</label>
-        <input type="text" class="form-control" v-model="user.name" placeholder="Enter name" required>
-      </div>
-      <div class="form-group">
-        <label>Surname</label>
-        <input type="text" class="form-control" v-model="user.surname" placeholder="Enter surname" required>
+        <input type="text" class="form-control" v-model="user.displayName" placeholder="Enter name" required>
       </div>
       <div class="form-group">
         <label>Email</label>
@@ -29,10 +25,9 @@ export default {
       title: 'Add user',
       url: 'http://localhost:3000/users/',
       user: {
-        name: '',
-        surname: '',
+        displayName: '',
         email: '',
-        registered: new Date(),
+        createdAt: new Date(),
         ava: 'http://i.imgur.com/xmm2bjD.png'
       }
     }

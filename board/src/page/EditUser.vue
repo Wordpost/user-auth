@@ -1,18 +1,14 @@
 <template>
   <div class="container">
-    <h1>{{title}}</h1>
-    <form @submit.prevent="submit">
+    <h1 class="py-4">{{title}}</h1>
+    <form @submit.prevent="userEdit">
       <div class="form-group">
         <label>Name</label>
-        <input type="text" class="form-control" v-model="user.name" placeholder="Enter name" required>
-      </div>
-      <div class="form-group">
-        <label>Surname</label>
-        <input type="text" class="form-control" v-model="user.surname" placeholder="Enter surname" required>
+        <input type="text" class="form-control" v-model="getName" placeholder="Enter name" required>
       </div>
       <div class="form-group">
         <label>Email</label>
-        <input type="email" class="form-control" v-model="user.email" placeholder="Enter email" required>
+        <input type="email" class="form-control" v-model="getEmail" placeholder="Enter email" required>
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
@@ -20,38 +16,23 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'EditUser',
   data () {
     return {
-      title: 'Edit user',
-      url: `http://localhost:3000/users/${this.$route.params.id}`,
-      user: {}
+      title: 'Edit user'
     }
   },
-  mounted () {
-    this.loadData()
+  computed: {
+    ...mapGetters([
+      'getName',
+      'getEmail',
+      'getAva'
+    ])
   },
   methods: {
-    loadData () {
-      axios.get(this.url)
-        .then(res => {
-          this.user = res.data
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    submit () {
-      axios.put(`http://localhost:3000/users/${this.user.id}`, this.user)
-        .then(res => {
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
+    ...mapActions(['userEdit'])
   }
 }
 </script>

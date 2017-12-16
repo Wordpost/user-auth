@@ -26,7 +26,6 @@ const store = new Vuex.Store({
       id: ''
     }
   }),
-
   mutations: {
     SET_USER (state, data) {
       state.pending = true
@@ -34,23 +33,19 @@ const store = new Vuex.Store({
       state.user.email = data.email
       state.user.id = data.id
     },
-
     LOGIN_SUCCESS (state) {
       state.pending = false
     },
-
     LOGOUT (state) {
       state.isLoggedIn = false
       state.user.name = ''
       state.user.email = ''
       state.user.id = ''
     },
-
     SET_TOKEN (state, token) {
       state.isLoggedIn = token
     }
   },
-
   actions: {
     async login ({ dispatch, commit }, [context, creds]) {
       let res = await axios.post('/login', creds)
@@ -59,17 +54,13 @@ const store = new Vuex.Store({
         dispatch('getUser', res.data)
         context.$router.push('/list')
       } else {
-        commit('LOGOUT')
-        localStorage.removeItem('id_token')
+        dispatch('setToken', false)
       }
       return true
     },
-
-    logout ({ state, commit }) {
-      commit('LOGOUT')
-      localStorage.removeItem('id_token')
+    logout ({ state, dispatch, commit }) {
+      dispatch('setToken', false)
     },
-
     setToken ({ state, commit }, token) {
       if (token) {
         localStorage.setItem('id_token', token)
@@ -81,7 +72,10 @@ const store = new Vuex.Store({
       }
       return true
     },
-
+    async userEdit ({getters, dispatch, commit}) {
+      let res = await axios.put(`/edit/${getters.getId}`)
+      console.log(res)
+    },
     async getUser ({state, dispatch, commit}) {
       let res = await axios.get('/user')
       console.log(res)
@@ -92,13 +86,21 @@ const store = new Vuex.Store({
       }
     }
   },
-
   getters: {
     isLoggedIn: state => {
       return state.isLoggedIn
     },
+    getEmail: state => {
+      return state.user.email
+    },
     getName: state => {
       return state.user.name
+    },
+    getAva: state => {
+      return state.user.ava || 'http://i.pravatar.cc/300'
+    },
+    getId: state => {
+      return state.user.id
     }
   }
 })
